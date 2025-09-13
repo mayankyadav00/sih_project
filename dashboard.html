@@ -1,51 +1,103 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 20px;
-        }
-        .dashboard {
-            text-align: center;
-            margin-top: 50px;
-        }
-        button {
-            margin-top: 20px;
-            padding: 10px;
-            cursor: pointer;
-        }
-    </style>
+    <title>Student Dashboard</title>
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
+    <header>
+        <h1>Gamified STEM Learning</h1>
+        <button onclick="logout()" class="logout-btn">Logout</button>
+    </header>
+
     <div class="dashboard">
-        <h2>Welcome, <span id="user-name"></span>!</h2>
-        <p>Your Role: <span id="user-role"></span></p>
-        <p>Your Class: <span id="user-class"></span></p>
-        <p>Explore STEM learning games soon 🚀</p>
-        <button onclick="logout()">Logout</button>
+
+        <div class="actions">
+            <button onclick="alert('Leaderboard - Coming Soon!')">Leaderboard</button>
+            <button onclick="alert('Achievements - Coming Soon!')">Achievements</button>
+            <button onclick="alert('Analytics - Coming Soon!')">Analytics Graph</button>
+        </div>
+
+        <div id="selection-area">
+            <h2>Select Your Class</h2>
+            <div id="class-options"></div>
+        </div>
+
     </div>
 
     <script>
         const userData = localStorage.getItem('loggedInUser');
-        if (userData) {
-            const user = JSON.parse(userData);
-            document.getElementById('user-name').textContent = user.name;
-            document.getElementById('user-role').textContent = user.role;
-            document.getElementById('user-class').textContent = user.classInfo;
-        } else {
-            alert('No user logged in! Redirecting to login page...');
-            window.location.href = 'index.html';
-        }
 
         function logout() {
             localStorage.removeItem('loggedInUser');
             window.location.href = 'index.html';
         }
+
+        function createButton(text, onClickHandler) {
+            const btn = document.createElement('button');
+            btn.textContent = text;
+            btn.onclick = onClickHandler;
+            return btn;
+        }
+
+        function clearSelectionArea() {
+            document.getElementById('selection-area').innerHTML = '';
+        }
+
+        function selectClass(selectedClass) {
+            clearSelectionArea();
+            const area = document.getElementById('selection-area');
+            area.innerHTML = `<h2>Selected Class: ${selectedClass}</h2><h3>Select Subject</h3>`;
+            const subjects = ["Science", "Math", "Technology", "Engineering"];
+
+            subjects.forEach(subject => {
+                area.appendChild(createButton(subject, () => selectSubject(selectedClass, subject)));
+            });
+        }
+
+        function selectSubject(selectedClass, selectedSubject) {
+            clearSelectionArea();
+            const area = document.getElementById('selection-area');
+            area.innerHTML = `<h2>${selectedSubject}</h2><h3>Select Chapter</h3>`;
+
+            // Placeholder chapters
+            const chapters = ["Chapter 1", "Chapter 2", "Chapter 3"];
+
+            chapters.forEach(chapter => {
+                area.appendChild(createButton(chapter, () => selectLevel(selectedClass, selectedSubject, chapter)));
+            });
+        }
+
+        function selectLevel(selectedClass, selectedSubject, selectedChapter) {
+            clearSelectionArea();
+            const area = document.getElementById('selection-area');
+            area.innerHTML = `<h2>${selectedSubject} - ${selectedChapter}</h2><h3>Select Level</h3>`;
+
+            const levels = ["Basic", "Intermediate", "Advanced"];
+
+            levels.forEach(level => {
+                area.appendChild(createButton(level, () => alert(`You selected: Class ${selectedClass}, Subject ${selectedSubject}, Chapter ${selectedChapter}, Level ${level}`)));
+            });
+        }
+
+        if (userData) {
+            const user = JSON.parse(userData);
+
+            document.getElementById('class-options').innerHTML = '';
+            ["6", "7", "8"].forEach(cls => {
+                document.getElementById('class-options').appendChild(createButton(`Class ${cls}`, () => selectClass(cls)));
+            });
+        } else {
+            alert('No user logged in! Redirecting to login page...');
+            window.location.href = 'index.html';
+        }
     </script>
 
 </body>
+
 </html>
+

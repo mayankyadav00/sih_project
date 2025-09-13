@@ -89,10 +89,24 @@
             document.getElementById('selection-area').innerHTML = '';
         }
 
+        function showClassOptions() {
+            clearSelectionArea();
+            const area = document.getElementById('selection-area');
+            area.innerHTML = `<h2>Select Your Class</h2><div id="class-options"></div>`;
+            ["6", "7", "8"].forEach(cls => {
+                document.getElementById('class-options').appendChild(createButton(`Class ${cls}`, () => selectClass(cls)));
+            });
+        }
+
         function selectClass(selectedClass) {
             clearSelectionArea();
             const area = document.getElementById('selection-area');
             area.innerHTML = `<h2>Selected Class: ${selectedClass}</h2><h3>Select Subject</h3>`;
+
+            // Back button
+            const backBtn = createButton("← Back", () => showClassOptions());
+            backBtn.style.backgroundColor = "#F5A623";
+            area.appendChild(backBtn);
 
             const subjects = Object.keys(curriculum[selectedClass]);
             subjects.forEach(subject => {
@@ -105,8 +119,12 @@
             const area = document.getElementById('selection-area');
             area.innerHTML = `<h2>${selectedSubject}</h2><h3>Select Chapter</h3>`;
 
-            const chapters = curriculum[selectedClass][selectedSubject];
+            // Back button
+            const backBtn = createButton("← Back", () => selectClass(selectedClass));
+            backBtn.style.backgroundColor = "#F5A623";
+            area.appendChild(backBtn);
 
+            const chapters = curriculum[selectedClass][selectedSubject];
             chapters.forEach(({ chapter }) => {
                 area.appendChild(createButton(chapter, () => selectChapter(selectedClass, selectedSubject, chapter)));
             });
@@ -117,8 +135,12 @@
             const area = document.getElementById('selection-area');
             area.innerHTML = `<h2>${selectedSubject} - ${selectedChapter}</h2><h3>Select Level</h3>`;
 
-            const levels = ["Basic", "Intermediate", "Advanced"];
+            // Back button
+            const backBtn = createButton("← Back", () => selectSubject(selectedClass, selectedSubject));
+            backBtn.style.backgroundColor = "#F5A623";
+            area.appendChild(backBtn);
 
+            const levels = ["Basic", "Intermediate", "Advanced"];
             levels.forEach(level => {
                 area.appendChild(createButton(level, () => alert(`You selected:\nClass: ${selectedClass}\nSubject: ${selectedSubject}\nChapter: ${selectedChapter}\nLevel: ${level}`)));
             });
@@ -129,19 +151,15 @@
             window.location.href = 'index.html';
         }
 
+        // Initialize dashboard
         const userData = localStorage.getItem('loggedInUser');
-
         if (userData) {
-            const user = JSON.parse(userData);
-
-            document.getElementById('class-options').innerHTML = '';
-            ["6", "7", "8"].forEach(cls => {
-                document.getElementById('class-options').appendChild(createButton(`Class ${cls}`, () => selectClass(cls)));
-            });
+            showClassOptions();
         } else {
             alert('No user logged in! Redirecting to login page...');
             window.location.href = 'index.html';
         }
+
     </script>
 
 </body>

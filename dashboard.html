@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        .dashboard {
+            text-align: center;
+            margin-top: 50px;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="dashboard">
+        <h2>Welcome, <span id="user-name"></span>!</h2>
+        <p>Your Role: <span id="user-role"></span></p>
+        <p>Your Class: <span id="user-class"></span></p>
+        <p>Explore STEM learning games soon 🚀</p>
+        <button onclick="logout()">Logout</button>
+    </div>
+
+    <script>
+        const userData = localStorage.getItem('loggedInUser');
+        if (userData) {
+            const user = JSON.parse(userData);
+            document.getElementById('user-name').textContent = user.name;
+            document.getElementById('user-role').textContent = user.role;
+            document.getElementById('user-class').textContent = user.classInfo;
+        } else {
+            alert('No user logged in! Redirecting to login page...');
+            window.location.href = 'index.html';
+        }
+
+        function logout() {
+            localStorage.removeItem('loggedInUser');
+            window.location.href = 'index.html';
+        }
+    </script>
+
+</body>
+</html>

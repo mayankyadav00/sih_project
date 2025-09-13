@@ -29,73 +29,56 @@
 
     </div>
 
-    <script>
-        const userData = localStorage.getItem('loggedInUser');
-
-        function logout() {
-            localStorage.removeItem('loggedInUser');
-            window.location.href = 'index.html';
+<script>
+    const curriculum = {
+        "6": {
+            "Science": [
+                { "chapter": "Components of Food", "levels": ["Basic", "Intermediate", "Advanced"] },
+                { "chapter": "Materials Around Us", "levels": ["Basic", "Intermediate", "Advanced"] }
+            ],
+            "Technology": [
+                { "chapter": "Introduction to Computers", "levels": ["Basic", "Intermediate", "Advanced"] }
+            ],
+            "Engineering": [
+                { "chapter": "Simple Machines", "levels": ["Basic", "Intermediate", "Advanced"] }
+            ],
+            "Mathematics": [
+                { "chapter": "Knowing Our Numbers", "levels": ["Basic", "Intermediate", "Advanced"] }
+            ]
+        },
+        "7": {
+            "Science": [
+                { "chapter": "Nutrition in Plants", "levels": ["Basic", "Intermediate", "Advanced"] },
+                { "chapter": "Heat", "levels": ["Basic", "Intermediate", "Advanced"] }
+            ],
+            "Technology": [
+                { "chapter": "Internet Basics", "levels": ["Basic", "Intermediate", "Advanced"] }
+            ],
+            "Engineering": [
+                { "chapter": "Introduction to Simple Circuits", "levels": ["Basic", "Intermediate", "Advanced"] }
+            ],
+            "Mathematics": [
+                { "chapter": "Integers", "levels": ["Basic", "Intermediate", "Advanced"] }
+            ]
+        },
+        "8": {
+            "Science": [
+                { "chapter": "Cell Structure and Functions", "levels": ["Basic", "Intermediate", "Advanced"] },
+                { "chapter": "Reproduction in Plants", "levels": ["Basic", "Intermediate", "Advanced"] }
+            ],
+            "Technology": [
+                { "chapter": "Networking Basics", "levels": ["Basic", "Intermediate", "Advanced"] }
+            ],
+            "Engineering": [
+                { "chapter": "Understanding Force and Motion", "levels": ["Basic", "Intermediate", "Advanced"] }
+            ],
+            "Mathematics": [
+                { "chapter": "Rational Numbers", "levels": ["Basic", "Intermediate", "Advanced"] }
+            ]
         }
+    };
+</script>
 
-        function createButton(text, onClickHandler) {
-            const btn = document.createElement('button');
-            btn.textContent = text;
-            btn.onclick = onClickHandler;
-            return btn;
-        }
-
-        function clearSelectionArea() {
-            document.getElementById('selection-area').innerHTML = '';
-        }
-
-        function selectClass(selectedClass) {
-            clearSelectionArea();
-            const area = document.getElementById('selection-area');
-            area.innerHTML = `<h2>Selected Class: ${selectedClass}</h2><h3>Select Subject</h3>`;
-            const subjects = ["Science", "Math", "Technology", "Engineering"];
-
-            subjects.forEach(subject => {
-                area.appendChild(createButton(subject, () => selectSubject(selectedClass, subject)));
-            });
-        }
-
-        function selectSubject(selectedClass, selectedSubject) {
-            clearSelectionArea();
-            const area = document.getElementById('selection-area');
-            area.innerHTML = `<h2>${selectedSubject}</h2><h3>Select Chapter</h3>`;
-
-            // Placeholder chapters
-            const chapters = ["Chapter 1", "Chapter 2", "Chapter 3"];
-
-            chapters.forEach(chapter => {
-                area.appendChild(createButton(chapter, () => selectLevel(selectedClass, selectedSubject, chapter)));
-            });
-        }
-
-        function selectLevel(selectedClass, selectedSubject, selectedChapter) {
-            clearSelectionArea();
-            const area = document.getElementById('selection-area');
-            area.innerHTML = `<h2>${selectedSubject} - ${selectedChapter}</h2><h3>Select Level</h3>`;
-
-            const levels = ["Basic", "Intermediate", "Advanced"];
-
-            levels.forEach(level => {
-                area.appendChild(createButton(level, () => alert(`You selected: Class ${selectedClass}, Subject ${selectedSubject}, Chapter ${selectedChapter}, Level ${level}`)));
-            });
-        }
-
-        if (userData) {
-            const user = JSON.parse(userData);
-
-            document.getElementById('class-options').innerHTML = '';
-            ["6", "7", "8"].forEach(cls => {
-                document.getElementById('class-options').appendChild(createButton(`Class ${cls}`, () => selectClass(cls)));
-            });
-        } else {
-            alert('No user logged in! Redirecting to login page...');
-            window.location.href = 'index.html';
-        }
-    </script>
 
 </body>
 

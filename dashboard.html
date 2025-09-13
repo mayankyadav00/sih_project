@@ -28,6 +28,10 @@
         </div>
 
     </div>
+    <div id="selection-area">
+        <h2>Select Your Class</h2>
+        <div id="class-options"></div>
+    </div>
 
 <script>
     const curriculum = {
@@ -77,66 +81,65 @@
             ]
         }
     };
-   
-    function selectClass(selectedClass) {
-      function selectClass(selectedClass) {
-      clearSelectionArea();
-      const area = document.getElementById('selection-area');
-      area.innerHTML = `<h2>Selected Class: ${selectedClass}</h2><h3>Select Subject</h3>`;
 
-      const subjects = Object.keys(curriculum[selectedClass]);
-      subjects.forEach(subject => {
-        const btn = document.createElement('button');
-        btn.textContent = subject;
-        btn.onclick = () => selectSubject(selectedClass, subject);
-        area.appendChild(btn);
-      });
-    }
+   function createButton(text, onClickHandler) {
+    const btn = document.createElement('button');
+    btn.textContent = text;
+    btn.onclick = onClickHandler;
+    return btn;
+}
 
-    function selectSubject(selectedClass, selectedSubject) {
-      function selectClass(selectedClass) {
-      clearSelectionArea();
-      const area = document.getElementById('selection-area');
-      area.innerHTML = `<h2>Selected Class: ${selectedClass}</h2><h3>Select Subject</h3>`;
+function clearSelectionArea() {
+    document.getElementById('selection-area').innerHTML = '';
+}
+function selectClass(selectedClass) {
+    clearSelectionArea();
+    const area = document.getElementById('selection-area');
+    area.innerHTML = `<h2>Selected Class: ${selectedClass}</h2><h3>Select Subject</h3>`;
 
-      const subjects = Object.keys(curriculum[selectedClass]);
-      subjects.forEach(subject => {
-        const btn = document.createElement('button');
-        btn.textContent = subject;
-        btn.onclick = () => selectSubject(selectedClass, subject);
-        area.appendChild(btn);
-      });
-    }
+    const subjects = Object.keys(curriculum[selectedClass]);
+    subjects.forEach(subject => {
+        area.appendChild(createButton(subject, () => selectSubject(selectedClass, subject)));
+    });
+}
 
-    function selectChapter(selectedClass, selectedSubject, selectedChapter) {
-      function selectClass(selectedClass) {
-      clearSelectionArea();
-      const area = document.getElementById('selection-area');
-      area.innerHTML = `<h2>Selected Class: ${selectedClass}</h2><h3>Select Subject</h3>`;
+function selectSubject(selectedClass, selectedSubject) {
+    clearSelectionArea();
+    const area = document.getElementById('selection-area');
+    area.innerHTML = `<h2>${selectedSubject}</h2><h3>Select Chapter</h3>`;
 
-      const subjects = Object.keys(curriculum[selectedClass]);
-      subjects.forEach(subject => {
-        const btn = document.createElement('button');
-        btn.textContent = subject;
-        btn.onclick = () => selectSubject(selectedClass, subject);
-        area.appendChild(btn);
-      });
-    }
+    const chapters = curriculum[selectedClass][selectedSubject];
 
-    function selectLevel(selectedClass, selectedSubject, selectedChapter, selectedLevel) {
-      function selectClass(selectedClass) {
-      clearSelectionArea();
-      const area = document.getElementById('selection-area');
-      area.innerHTML = `<h2>Selected Class: ${selectedClass}</h2><h3>Select Subject</h3>`;
+    chapters.forEach(({ chapter }) => {
+        area.appendChild(createButton(chapter, () => selectChapter(selectedClass, selectedSubject, chapter)));
+    });
+}
 
-      const subjects = Object.keys(curriculum[selectedClass]);
-      subjects.forEach(subject => {
-        const btn = document.createElement('button');
-        btn.textContent = subject;
-        btn.onclick = () => selectSubject(selectedClass, subject);
-        area.appendChild(btn);
-      });
-    }
+function selectChapter(selectedClass, selectedSubject, selectedChapter) {
+    clearSelectionArea();
+    const area = document.getElementById('selection-area');
+    area.innerHTML = `<h2>${selectedSubject} - ${selectedChapter}</h2><h3>Select Level</h3>`;
+
+    const levels = ["Basic", "Intermediate", "Advanced"];
+
+    levels.forEach(level => {
+        area.appendChild(createButton(level, () => alert(`You selected:\nClass: ${selectedClass}\nSubject: ${selectedSubject}\nChapter: ${selectedChapter}\nLevel: ${level}`)));
+    });
+}
+const userData = localStorage.getItem('loggedInUser');
+
+if (userData) {
+    const user = JSON.parse(userData);
+
+    document.getElementById('class-options').innerHTML = '';
+    ["6", "7", "8"].forEach(cls => {
+        document.getElementById('class-options').appendChild(createButton(`Class ${cls}`, () => selectClass(cls)));
+    });
+} else {
+    alert('No user logged in! Redirecting to login page...');
+    window.location.href = 'index.html';
+}
+
 
 </script>
 

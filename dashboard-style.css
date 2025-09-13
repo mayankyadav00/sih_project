@@ -75,16 +75,16 @@ header h1 {
 }
 
 button {
-    padding: 10px 20px;
-    font-size: 16px;
-    border-radius: 8px;
-    background-color: #000DFF;
-    color: white;
-    border: none;
-    cursor: pointer;
-    transition: background 0.3s ease;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 8px;
+  background-color: #000DFF;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s ease;
 }
 
 button:hover {
-    background-color: #3333FF;
+  background-color: #3333FF;
 }

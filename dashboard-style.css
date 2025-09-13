@@ -1,3 +1,4 @@
+/* Global Reset */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -11,6 +12,7 @@ body {
     min-height: 100vh;
 }
 
+/* Header */
 header {
     display: flex;
     justify-content: space-between;
@@ -23,8 +25,10 @@ header {
 
 header h1 {
     font-size: 24px;
+    font-weight: 600;
 }
 
+/* Logout Button */
 .logout-btn {
     background-color: #F5A623;
     border: none;
@@ -40,33 +44,38 @@ header h1 {
     background-color: #e5941a;
 }
 
+/* Dashboard Container */
 .dashboard {
     padding: 20px;
     text-align: center;
 }
 
+/* Action Buttons: Leaderboard, Achievements, Analytics */
 .actions {
     display: flex;
     justify-content: center;
     gap: 15px;
     margin-bottom: 25px;
+    flex-wrap: wrap;
 }
 
 .actions button {
     background-color: #50E3C2;
     border: none;
     color: white;
-    padding: 12px 20px;
+    padding: 12px 25px;
     border-radius: 8px;
     cursor: pointer;
     font-size: 14px;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .actions button:hover {
     background-color: #3bb8a1;
+    transform: translateY(-2px);
 }
 
+/* Selection Area */
 #selection-area {
     display: flex;
     flex-direction: column;
@@ -75,17 +84,59 @@ header h1 {
     margin-top: 20px;
 }
 
+/* General Buttons (Class, Subject, Chapter, Level, Back) */
 button {
-    padding: 10px 20px;
+    padding: 10px 25px;
     font-size: 16px;
     border-radius: 8px;
     background-color: #4A90E2;
     color: white;
     border: none;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 button:hover {
     background-color: #357ABD;
+    transform: translateY(-2px);
+}
+
+/* Back Button */
+#selection-area button:first-child {
+    background-color: #F5A623;
+}
+
+#selection-area button:first-child:hover {
+    background-color: #e5941a;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    button {
+        width: 80%;
+        max-width: 250px;
+    }
+}
+
+/* Headings in Selection Area */
+#selection-area h2 {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+#selection-area h3 {
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 15px;
+}
+
+/* Smooth transitions for all interactive elements */
+button, .actions button {
+    transition: all 0.2s ease-in-out;
 }

@@ -4,130 +4,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gamified Learning Dashboard</title>
-    <link rel="stylesheet" href="dashboard-style.css">
+    <title>Dashboard - Gamified Learning</title>
+    <link rel="stylesheet" href="./dashboard-style.css">
 </head>
 
 <body>
     <header>
-        <h1>Gamified Learning Dashboard</h1>
+        Gamified Learning Dashboard
         <button class="logout-btn" onclick="logout()">Logout</button>
     </header>
 
     <div class="actions">
-        <button onclick="alert('Leaderboard - Coming Soon!')">Leaderboard</button>
-        <button onclick="alert('Achievements - Coming Soon!')">Achievements</button>
-        <button onclick="alert('Analytics - Coming Soon!')">Analytics Graph</button>
+        <button onclick="startSelection()">Start Learning</button>
+        <button>Leaderboard</button>
+        <button>Achievements</button>
+        <button>Analytics Graph</button>
     </div>
 
-    <div id="selection-area"></div>
+    <div id="selection-area">
+        <!-- Dynamic selections will appear here -->
+    </div>
 
     <script>
-        const curriculum = {
-            "6": {
-                "Science": [{ chapter: "Components of Food" }, { chapter: "Plant Reproduction" }, { chapter: "Motion and Measurement" }],
-                "Math": [{ chapter: "Number Systems" }, { chapter: "Basic Geometry" }, { chapter: "Data Handling" }],
-                "Technology": [{ chapter: "Simple Machines" }, { chapter: "Introduction to Robotics" }, { chapter: "Computer Basics" }],
-                "Engineering": [{ chapter: "Basic Circuit Concepts" }, { chapter: "Structures and Design" }, { chapter: "Engineering Tools" }]
-            },
-            "7": {
-                "Science": [{ chapter: "Nutrition in Plants" }, { chapter: "Weather, Climate and Adaptations" }, { chapter: "Electric Current" }],
-                "Math": [{ chapter: "Integers" }, { chapter: "Fractions and Decimals" }, { chapter: "Lines and Angles" }],
-                "Technology": [{ chapter: "Simple Circuits" }, { chapter: "Advanced Robotics" }, { chapter: "Computer Hardware" }],
-                "Engineering": [{ chapter: "Bridge Building Concepts" }, { chapter: "Lever Mechanics" }, { chapter: "Hydraulics" }]
-            },
-            "8": {
-                "Science": [{ chapter: "Cell Structure" }, { chapter: "Force and Pressure" }, { chapter: "Sound" }],
-                "Math": [{ chapter: "Algebra Basics" }, { chapter: "Perimeter and Area" }, { chapter: "Volume and Surface Area" }],
-                "Technology": [{ chapter: "Automata" }, { chapter: "Advanced Circuits" }, { chapter: "Network Basics" }],
-                "Engineering": [{ chapter: "Mechanical Systems" }, { chapter: "Material Strength" }, { chapter: "Building Systems" }]
-            }
-        };
+        const user = JSON.parse(localStorage.getItem("loggedInUser"));
+
+        if (!user) {
+            alert("Please login first.");
+            window.location.href = "./index.html";
+        }
 
         function logout() {
-            localStorage.removeItem('loggedInUser');
-            window.location.href = 'index.html';
+            localStorage.removeItem("loggedInUser");
+            window.location.href = "./index.html";
         }
 
-        function createButton(text, onClickAction) {
-            const btn = document.createElement('button');
-            btn.textContent = text;
-            btn.onclick = onClickAction;
-            return btn;
+        function startSelection() {
+            const selectionArea = document.getElementById('selection-area');
+            selectionArea.innerHTML = `
+                <h2>Select Class</h2>
+                <button onclick="selectSubject(6)">Class 6</button>
+                <button onclick="selectSubject(7)">Class 7</button>
+                <button onclick="selectSubject(8)">Class 8</button>
+            `;
         }
 
-        function clearSelectionArea() {
-            document.getElementById('selection-area').innerHTML = '';
+        function selectSubject(cls) {
+            const selectionArea = document.getElementById('selection-area');
+            selectionArea.innerHTML = `
+                <h2>Select Subject (STEM)</h2>
+                <button onclick="selectChapter(${cls}, 'Science')">Science</button>
+                <button onclick="selectChapter(${cls}, 'Math')">Math</button>
+                <button onclick="selectChapter(${cls}, 'Technology')">Technology</button>
+                <button onclick="selectChapter(${cls}, 'Engineering')">Engineering</button>
+                <button onclick="startSelection()">← Back</button>
+            `;
         }
 
-        function showClassOptions() {
-            clearSelectionArea();
-            const area = document.getElementById('selection-area');
-            area.innerHTML = `<h2>Select Your Class</h2><div id="class-options"></div>`;
-            ["6", "7", "8"].forEach(cls => {
-                document.getElementById('class-options').appendChild(createButton(`Class ${cls}`, () => selectClass(cls)));
-            });
+        function selectChapter(cls, subject) {
+            const selectionArea = document.getElementById('selection-area');
+            selectionArea.innerHTML = `
+                <h2>Select Chapter</h2>
+                <button onclick="selectLevel(${cls}, '${subject}', 'Chapter1')">Chapter 1</button>
+                <button onclick="selectLevel(${cls}, '${subject}', 'Chapter2')">Chapter 2</button>
+                <button onclick="selectLevel(${cls}, '${subject}', 'Chapter3')">Chapter 3</button>
+                <button onclick="selectSubject(${cls})">← Back</button>
+            `;
         }
 
-        function selectClass(selectedClass) {
-            clearSelectionArea();
-            const area = document.getElementById('selection-area');
-            area.innerHTML = `<h2>Selected Class: ${selectedClass}</h2><h3>Select Subject</h3>`;
-
-            const backBtn = createButton("← Back", showClassOptions);
-            backBtn.style.backgroundColor = "#F5A623";
-            area.appendChild(backBtn);
-
-            const subjects = Object.keys(curriculum[selectedClass]);
-            subjects.forEach(subject => {
-                area.appendChild(createButton(subject, () => selectSubject(selectedClass, subject)));
-            });
-        }
-
-        function selectSubject(selectedClass, selectedSubject) {
-            clearSelectionArea();
-            const area = document.getElementById('selection-area');
-            area.innerHTML = `<h2>${selectedSubject}</h2><h3>Select Chapter</h3>`;
-
-            const backBtn = createButton("← Back", () => selectClass(selectedClass));
-            backBtn.style.backgroundColor = "#F5A623";
-            area.appendChild(backBtn);
-
-            const chapters = curriculum[selectedClass][selectedSubject];
-            chapters.forEach(({ chapter }) => {
-                area.appendChild(createButton(chapter, () => selectChapter(selectedClass, selectedSubject, chapter)));
-            });
-        }
-
-        function selectChapter(selectedClass, selectedSubject, selectedChapter) {
-            clearSelectionArea();
-            const area = document.getElementById('selection-area');
-            area.innerHTML = `<h2>${selectedSubject} - ${selectedChapter}</h2><h3>Select Level</h3>`;
-
-            const backBtn = createButton("← Back", () => selectSubject(selectedClass, selectedSubject));
-            backBtn.style.backgroundColor = "#F5A623";
-            area.appendChild(backBtn);
-
-            const levels = ["Basic", "Intermediate", "Advanced"];
-            levels.forEach(level => {
-                area.appendChild(createButton(level, () => {
-                    window.location.href = `games/flappy-science.html?class=${selectedClass}&subject=${encodeURIComponent(selectedSubject)}&chapter=${encodeURIComponent(selectedChapter)}&level=${level}`;
-                }));
-            });
-        }
-
-        // Initialize dashboard
-        const userData = localStorage.getItem('loggedInUser');
-        if (userData) {
-            showClassOptions();
-        } else {
-            alert('No user logged in! Redirecting to login page...');
-            window.location.href = 'index.html';
-        }
-    </script>
-    <center> <img height="600" src="logo1.png">
-    </center>
-   
-</body>
-
-</html>
+        function selectLevel(cls, subject, chapter) {
+            const selectionArea = document.getElementById('selection-area');
+            selectionArea.innerHTML = `
+                <h2>Select Level</h2>
+                <button onclick="startGame(${cls}, '${subject}', '${chapter}', 'Basic')">Basic</button>
+                <button onclick="startGame(${cls}, '${subject}',

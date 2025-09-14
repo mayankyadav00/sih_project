@@ -1,0 +1,40 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background: #f0f8ff;
+    text-align: center;
+    padding: 20px;
+}
+
+button {
+    background-color: #00796B;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+button:disabled {
+    background-color: #999;
+}
+
+.image-options img,
+.image-grid img {
+    width: 150px;
+    margin: 10px;
+    cursor: pointer;
+}
+
+.mirror-game {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.mirror-area {
+    width: 200px;
+    height: 200px;
+    border: 2px dashed #333;
+    margin-left: 20px;
+}

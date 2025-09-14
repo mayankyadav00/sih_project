@@ -51,9 +51,11 @@ button:hover {
 }
 
 .back-btn {
-    margin-top: 20px;
     background-color: #ddd;
     color: #333;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
 }
 
 h2 {

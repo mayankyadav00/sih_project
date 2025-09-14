@@ -22,7 +22,7 @@
     </div>
 
     <div id="selection-area">
-        <!-- Dynamic selections will be shown here -->
+        <!-- Selections will appear here -->
     </div>
 
     <script>
@@ -88,9 +88,11 @@
 
         function startGame(cls, subject, chapter, level) {
             alert(`Game will start for:\nClass: ${cls}\nSubject: ${subject}\nChapter: ${chapter}\nLevel: ${level}`);
-            // Replace alert with game page redirection later
-            // e.g. window.location.href = `games/game.html?class=${cls}&subject=${subject}&chapter=${chapter}&level=${level}`;
+            // Later: window.location.href = `games/game.html?class=${cls}&subject=${subject}&chapter=${chapter}&level=${level}`;
         }
+
+        // ➤ Automatically trigger class selection on page load
+        window.onload = startSelection;
     </script>
 </body>
 

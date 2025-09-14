@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Flappy Science - Game</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: linear-gradient(#ccefff, #66ccff);
+            font-family: Arial, sans-serif;
+        }
+        canvas {
+            display: block;
+            margin: 0 auto;
+            background: #87CEFA;
+        }
+        #score {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 24px;
+            color: #fff;
+            font-weight: bold;
+            text-shadow: 2px 2px #000;
+        }
+        #game-over {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 36px;
+            color: red;
+            display: none;
+            text-align: center;
+        }
+        #restart-btn, #next-level-btn, #dashboard-btn {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: #F5A623;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        #restart-btn:hover, #next-level-btn:hover, #dashboard-btn:hover {
+            background-color: #e5941a;
+        }
+    </style>
+</head>
+<body>
+
+<div id="score">Score: 0</div>
+<div id="game-over">
+    <div id="game-over-text">Game Over!</div>
+    <button id="restart-btn">Retry Level</button>
+    <button id="dashboard-btn">Return to Dashboard</button>
+</div>
+<canvas id="gameCanvas" width="480" height="640"></canvas>
+
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const userClass = urlParams.get('class');
+    const userSubject = urlParams.get('subject');
+    const userChapter = urlParams.get('chapter');
+    const userLevelType = urlParams.get('level');
+
+    let currentGameLevel = 1;
+    const maxLevels = 5;
+
+    let canvas = document.getElementById("gameCanvas");
+    let ctx = canvas.getContext("2d");
+
+    let bird = { x: 50, y: 300, width: 30, height: 30, gravity: 0.6, velocity: 0, jump: -10 };
+    let pipes = [];
+    let frame = 0;
+    let score = 0;
+    let gameOver = false;
+
+    function getDifficultySettings(levelNum) {
+        // Difficulty increases with level number
+        return {
+            pipeGap: 150 - (levelNum - 1) * 10, // Narrower gap each level
+            pipeSpeed: 2 + (levelNum - 1) * 0.5 // Faster pipes
+        };
+    }
+
+    function createPipe(pipeSpeed, pipeGap) {
+        let height = Math.floor(Math.random() * 200) + 100;
+        pipes.push({
+            x: canvas.width,
+            y: 0,
+            width: 50,
+            height: height,
+            speed: pipeSpeed,
+            gap: pipeGap
+        });
+        pipes.push({
+            x: canvas.width,
+            y: height + pipeGap,
+            width: 50,
+            height: canvas.height - height - pipeGap,
+            speed: pipeSpeed,
+            gap: pipeGap
+        });
+    }
+
+    function drawBird() {
+        ctx.fillStyle = "yellow";
+        ctx.fillRect(bird.x, bird.y, bird.width, bird.height);
+    }
+
+    function drawPipes() {
+        ctx.fillStyle = "green";
+        pipes.forEach(pipe => {
+            ctx.fillRect(pipe.x, pipe.y, pipe.width, pipe.height);
+        });
+    }
+
+    function update() {
+        if (gameOver) return;
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        bird.velocity += bird.gravity;
+        bird.y += bird.velocity;
+
+        if (bird.y + bird.height > canvas.height || bird.y < 0) {
+            endGame();
+        }
+
+        const difficulty = getDifficultySettings(currentGameLevel);
+
+        if (frame % 90 === 0) createPipe(difficulty.pipeSpeed, difficulty.pipeGap);
+
+        pipes.forEach(pipe => {
+            pipe.x -= pipe.speed;
+
+            if (bird.x < pipe.x + pipe.width &&
+                bird.x + bird.width > pipe.x &&
+                bird.y < pipe.y + pipe.height &&
+                bird.y + bird.height > pipe.y) {
+                endGame();
+            }
+
+            if (!pipe.passed && pipe.x + pipe.width < bird.x) {
+                score += 0.5;
+                pipe.passed = true;
+                document.getElementById("score").innerText = "Score: " + Math.floor(score);
+            }
+        });
+
+        drawBird();
+        drawPipes();
+
+        frame++;
+        requestAnimationFrame(update);
+    }
+
+    function jump() {
+        bird.velocity = bird.jump;
+    }
+
+    function endGame() {
+        gameOver = true;
+        document.getElementById("game-over").style.display = "block";
+    }
+
+    document.addEventListener("keydown", (e) => {
+        if (e.code === "Space") jump();
+    });
+
+    document.getElementById("restart-btn").addEventListener("click", () => {
+        resetGame();
+        update();
+    });
+
+    document.getElementById("dashboard-btn").addEventListener("click", () => {
+        window.location.href = "../dashboard.html";
+    });
+
+    function resetGame() {
+        bird.y = 300;
+        bird.velocity = 0;
+        pipes = [];
+        score = 0;
+        frame = 0;
+        gameOver = false;
+        document.getElementById("game-over").style.display = "none";
+        document.getElementById("score").innerText = "Score: 0";
+    }
+
+    // Level Completion Flow
+    function nextLevel() {
+        if (currentGameLevel < maxLevels) {
+            currentGameLevel++;
+            resetGame();
+            update();
+        } else {
+            document.getElementById("game-over-text").innerText = "🎉 All Levels Completed! 🎉";
+            document.getElementById("restart-btn").style.display = "none";
+        }
+    }
+
+    document.getElementById("restart-btn").addEventListener("click", () => {
+        resetGame();
+        update();
+    });
+
+    // Auto proceed to next level if score threshold is met
+    const scoreThreshold = 10; // Example: progress every 10 points
+    function checkLevelProgress() {
+        if (Math.floor(score) >= scoreThreshold) {
+            alert(`Level ${currentGameLevel} completed! Moving to next level.`);
+            nextLevel();
+        } else {
+            requestAnimationFrame(checkLevelProgress);
+        }
+    }
+
+    // Initialize
+    if (userClass && userSubject && userChapter && userLevelType) {
+        update();
+        checkLevelProgress();
+    } else {
+        alert("Missing game parameters. Redirecting to dashboard.");
+        window.location.href = "../dashboard.html";
+    }
+</script>
+
+</body>
+</html>

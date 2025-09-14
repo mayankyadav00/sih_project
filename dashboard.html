@@ -22,7 +22,7 @@
     </div>
 
     <div id="selection-area">
-        <!-- Class, Subject, Chapter, Level selection will appear here -->
+        <!-- Dynamic selections will be shown here -->
     </div>
 
     <script>
@@ -51,7 +51,7 @@
 
         function selectSubject(cls) {
             document.getElementById('selection-area').innerHTML = `
-                <h2>Select Subject (STEM)</h2>
+                <h2>Select Subject</h2>
                 <div class="button-group">
                     <button onclick="selectChapter(${cls}, 'Science')">Science</button>
                     <button onclick="selectChapter(${cls}, 'Math')">Math</button>
@@ -87,8 +87,9 @@
         }
 
         function startGame(cls, subject, chapter, level) {
-            alert(`Game will start: Class ${cls}, ${subject}, ${chapter}, ${level}`);
-            // You can redirect to game page or initialize game here
+            alert(`Game will start for:\nClass: ${cls}\nSubject: ${subject}\nChapter: ${chapter}\nLevel: ${level}`);
+            // Replace alert with game page redirection later
+            // e.g. window.location.href = `games/game.html?class=${cls}&subject=${subject}&chapter=${chapter}&level=${level}`;
         }
     </script>
 </body>

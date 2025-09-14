@@ -3,85 +3,56 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Student Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gamified Learning Dashboard</title>
     <link rel="stylesheet" href="dashboard-style.css">
 </head>
 
 <body>
-
     <header>
-        <h1>Gamified STEM Learning</h1>
-        <button onclick="logout()" class="logout-btn">Logout</button>
+        <h1>Gamified Learning Dashboard</h1>
+        <button class="logout-btn" onclick="logout()">Logout</button>
     </header>
 
-    <div class="dashboard">
-
-        <div class="actions">
-            <button onclick="alert('Leaderboard - Coming Soon!')">Leaderboard</button>
-            <button onclick="alert('Achievements - Coming Soon!')">Achievements</button>
-            <button onclick="alert('Analytics - Coming Soon!')">Analytics Graph</button>
-        </div>
-
-        <div id="selection-area">
-            <h2>Select Your Class</h2>
-            <div id="class-options"></div>
-        </div>
-
+    <div class="actions">
+        <button onclick="alert('Leaderboard - Coming Soon!')">Leaderboard</button>
+        <button onclick="alert('Achievements - Coming Soon!')">Achievements</button>
+        <button onclick="alert('Analytics - Coming Soon!')">Analytics Graph</button>
     </div>
+
+    <div id="selection-area"></div>
 
     <script>
         const curriculum = {
             "6": {
-                "Science": [
-                    { "chapter": "Components of Food", "levels": ["Basic", "Intermediate", "Advanced"] },
-                    { "chapter": "Materials Around Us", "levels": ["Basic", "Intermediate", "Advanced"] }
-                ],
-                "Technology": [
-                    { "chapter": "Introduction to Computers", "levels": ["Basic", "Intermediate", "Advanced"] }
-                ],
-                "Engineering": [
-                    { "chapter": "Simple Machines", "levels": ["Basic", "Intermediate", "Advanced"] }
-                ],
-                "Mathematics": [
-                    { "chapter": "Knowing Our Numbers", "levels": ["Basic", "Intermediate", "Advanced"] }
-                ]
+                "Science": [{ chapter: "Components of Food" }, { chapter: "Plant Reproduction" }, { chapter: "Motion and Measurement" }],
+                "Math": [{ chapter: "Number Systems" }, { chapter: "Basic Geometry" }, { chapter: "Data Handling" }],
+                "Technology": [{ chapter: "Simple Machines" }, { chapter: "Introduction to Robotics" }, { chapter: "Computer Basics" }],
+                "Engineering": [{ chapter: "Basic Circuit Concepts" }, { chapter: "Structures and Design" }, { chapter: "Engineering Tools" }]
             },
             "7": {
-                "Science": [
-                    { "chapter": "Nutrition in Plants", "levels": ["Basic", "Intermediate", "Advanced"] },
-                    { "chapter": "Heat", "levels": ["Basic", "Intermediate", "Advanced"] }
-                ],
-                "Technology": [
-                    { "chapter": "Internet Basics", "levels": ["Basic", "Intermediate", "Advanced"] }
-                ],
-                "Engineering": [
-                    { "chapter": "Introduction to Simple Circuits", "levels": ["Basic", "Intermediate", "Advanced"] }
-                ],
-                "Mathematics": [
-                    { "chapter": "Integers", "levels": ["Basic", "Intermediate", "Advanced"] }
-                ]
+                "Science": [{ chapter: "Nutrition in Plants" }, { chapter: "Weather, Climate and Adaptations" }, { chapter: "Electric Current" }],
+                "Math": [{ chapter: "Integers" }, { chapter: "Fractions and Decimals" }, { chapter: "Lines and Angles" }],
+                "Technology": [{ chapter: "Simple Circuits" }, { chapter: "Advanced Robotics" }, { chapter: "Computer Hardware" }],
+                "Engineering": [{ chapter: "Bridge Building Concepts" }, { chapter: "Lever Mechanics" }, { chapter: "Hydraulics" }]
             },
             "8": {
-                "Science": [
-                    { "chapter": "Cell Structure and Functions", "levels": ["Basic", "Intermediate", "Advanced"] },
-                    { "chapter": "Reproduction in Plants", "levels": ["Basic", "Intermediate", "Advanced"] }
-                ],
-                "Technology": [
-                    { "chapter": "Networking Basics", "levels": ["Basic", "Intermediate", "Advanced"] }
-                ],
-                "Engineering": [
-                    { "chapter": "Understanding Force and Motion", "levels": ["Basic", "Intermediate", "Advanced"] }
-                ],
-                "Mathematics": [
-                    { "chapter": "Rational Numbers", "levels": ["Basic", "Intermediate", "Advanced"] }
-                ]
+                "Science": [{ chapter: "Cell Structure" }, { chapter: "Force and Pressure" }, { chapter: "Sound" }],
+                "Math": [{ chapter: "Algebra Basics" }, { chapter: "Perimeter and Area" }, { chapter: "Volume and Surface Area" }],
+                "Technology": [{ chapter: "Automata" }, { chapter: "Advanced Circuits" }, { chapter: "Network Basics" }],
+                "Engineering": [{ chapter: "Mechanical Systems" }, { chapter: "Material Strength" }, { chapter: "Building Systems" }]
             }
         };
 
-        function createButton(text, onClickHandler) {
+        function logout() {
+            localStorage.removeItem('loggedInUser');
+            window.location.href = 'index.html';
+        }
+
+        function createButton(text, onClickAction) {
             const btn = document.createElement('button');
             btn.textContent = text;
-            btn.onclick = onClickHandler;
+            btn.onclick = onClickAction;
             return btn;
         }
 
@@ -103,8 +74,7 @@
             const area = document.getElementById('selection-area');
             area.innerHTML = `<h2>Selected Class: ${selectedClass}</h2><h3>Select Subject</h3>`;
 
-            // Back button
-            const backBtn = createButton("← Back", () => showClassOptions());
+            const backBtn = createButton("← Back", showClassOptions);
             backBtn.style.backgroundColor = "#F5A623";
             area.appendChild(backBtn);
 
@@ -119,7 +89,6 @@
             const area = document.getElementById('selection-area');
             area.innerHTML = `<h2>${selectedSubject}</h2><h3>Select Chapter</h3>`;
 
-            // Back button
             const backBtn = createButton("← Back", () => selectClass(selectedClass));
             backBtn.style.backgroundColor = "#F5A623";
             area.appendChild(backBtn);
@@ -130,38 +99,4 @@
             });
         }
 
-        function selectChapter(selectedClass, selectedSubject, selectedChapter) {
-            clearSelectionArea();
-            const area = document.getElementById('selection-area');
-            area.innerHTML = `<h2>${selectedSubject} - ${selectedChapter}</h2><h3>Select Level</h3>`;
-
-            // Back button
-            const backBtn = createButton("← Back", () => selectSubject(selectedClass, selectedSubject));
-            backBtn.style.backgroundColor = "#F5A623";
-            area.appendChild(backBtn);
-
-            const levels = ["Basic", "Intermediate", "Advanced"];
-            levels.forEach(level => {
-                area.appendChild(createButton(level, () => alert(`You selected:\nClass: ${selectedClass}\nSubject: ${selectedSubject}\nChapter: ${selectedChapter}\nLevel: ${level}`)));
-            });
-        }
-
-        function logout() {
-            localStorage.removeItem('loggedInUser');
-            window.location.href = 'index.html';
-        }
-
-        // Initialize dashboard
-        const userData = localStorage.getItem('loggedInUser');
-        if (userData) {
-            showClassOptions();
-        } else {
-            alert('No user logged in! Redirecting to login page...');
-            window.location.href = 'index.html';
-        }
-
-    </script>
-
-</body>
-
-</html>
+        function selectChapter(selectedClass, selectedSubject, se

@@ -10,7 +10,7 @@
 
 <body>
     <header>
-        Gamified Learning Dashboard
+        <h1>Gamified Learning Dashboard</h1>
         <button class="logout-btn" onclick="logout()">Logout</button>
     </header>
 
@@ -22,7 +22,7 @@
     </div>
 
     <div id="selection-area">
-        <!-- Dynamic selections will appear here -->
+        <!-- Class, Subject, Chapter, Level selection will appear here -->
     </div>
 
     <script>
@@ -39,41 +39,58 @@
         }
 
         function startSelection() {
-            const selectionArea = document.getElementById('selection-area');
-            selectionArea.innerHTML = `
+            document.getElementById('selection-area').innerHTML = `
                 <h2>Select Class</h2>
-                <button onclick="selectSubject(6)">Class 6</button>
-                <button onclick="selectSubject(7)">Class 7</button>
-                <button onclick="selectSubject(8)">Class 8</button>
+                <div class="button-group">
+                    <button onclick="selectSubject(6)">Class 6</button>
+                    <button onclick="selectSubject(7)">Class 7</button>
+                    <button onclick="selectSubject(8)">Class 8</button>
+                </div>
             `;
         }
 
         function selectSubject(cls) {
-            const selectionArea = document.getElementById('selection-area');
-            selectionArea.innerHTML = `
+            document.getElementById('selection-area').innerHTML = `
                 <h2>Select Subject (STEM)</h2>
-                <button onclick="selectChapter(${cls}, 'Science')">Science</button>
-                <button onclick="selectChapter(${cls}, 'Math')">Math</button>
-                <button onclick="selectChapter(${cls}, 'Technology')">Technology</button>
-                <button onclick="selectChapter(${cls}, 'Engineering')">Engineering</button>
-                <button onclick="startSelection()">← Back</button>
+                <div class="button-group">
+                    <button onclick="selectChapter(${cls}, 'Science')">Science</button>
+                    <button onclick="selectChapter(${cls}, 'Math')">Math</button>
+                    <button onclick="selectChapter(${cls}, 'Technology')">Technology</button>
+                    <button onclick="selectChapter(${cls}, 'Engineering')">Engineering</button>
+                </div>
+                <button class="back-btn" onclick="startSelection()">← Back</button>
             `;
         }
 
         function selectChapter(cls, subject) {
-            const selectionArea = document.getElementById('selection-area');
-            selectionArea.innerHTML = `
+            document.getElementById('selection-area').innerHTML = `
                 <h2>Select Chapter</h2>
-                <button onclick="selectLevel(${cls}, '${subject}', 'Chapter1')">Chapter 1</button>
-                <button onclick="selectLevel(${cls}, '${subject}', 'Chapter2')">Chapter 2</button>
-                <button onclick="selectLevel(${cls}, '${subject}', 'Chapter3')">Chapter 3</button>
-                <button onclick="selectSubject(${cls})">← Back</button>
+                <div class="button-group">
+                    <button onclick="selectLevel(${cls}, '${subject}', 'Chapter 1')">Chapter 1</button>
+                    <button onclick="selectLevel(${cls}, '${subject}', 'Chapter 2')">Chapter 2</button>
+                    <button onclick="selectLevel(${cls}, '${subject}', 'Chapter 3')">Chapter 3</button>
+                </div>
+                <button class="back-btn" onclick="selectSubject(${cls})">← Back</button>
             `;
         }
 
         function selectLevel(cls, subject, chapter) {
-            const selectionArea = document.getElementById('selection-area');
-            selectionArea.innerHTML = `
+            document.getElementById('selection-area').innerHTML = `
                 <h2>Select Level</h2>
-                <button onclick="startGame(${cls}, '${subject}', '${chapter}', 'Basic')">Basic</button>
-                <button onclick="startGame(${cls}, '${subject}',
+                <div class="button-group">
+                    <button onclick="startGame(${cls}, '${subject}', '${chapter}', 'Basic')">Basic</button>
+                    <button onclick="startGame(${cls}, '${subject}', '${chapter}', 'Intermediate')">Intermediate</button>
+                    <button onclick="startGame(${cls}, '${subject}', '${chapter}', 'Advanced')">Advanced</button>
+                </div>
+                <button class="back-btn" onclick="selectChapter(${cls}, '${subject}')">← Back</button>
+            `;
+        }
+
+        function startGame(cls, subject, chapter, level) {
+            alert(`Game will start: Class ${cls}, ${subject}, ${chapter}, ${level}`);
+            // You can redirect to game page or initialize game here
+        }
+    </script>
+</body>
+
+</html>

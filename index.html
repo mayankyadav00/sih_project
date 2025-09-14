@@ -75,9 +75,24 @@
 
         authForm.addEventListener("submit", function (e) {
             e.preventDefault();
-            // Your form submit logic here
-            const mode = isRegisterMode ? "Register" : "Login";
-            document.getElementById("message").innerText = mode + " successful (demo only)";
+
+            const email = document.getElementById("email").value.trim();
+            const password = document.getElementById("password").value.trim();
+            const name = document.getElementById("name").value.trim();
+            const age = document.getElementById("age").value.trim();
+
+            if (!email || !password || (isRegisterMode && (!name || !age))) {
+                document.getElementById("message").innerText = "Please fill in all required fields.";
+                return;
+            }
+
+            localStorage.setItem("loggedInUser", JSON.stringify({
+                name: name,
+                email: email,
+                age: age
+            }));
+
+            window.location.href = "./dashboard.html";
         });
     </script>
 </body>

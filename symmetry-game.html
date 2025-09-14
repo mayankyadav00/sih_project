@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Symmetry Game - Class 6 Chapter 1</title>
+    <link rel="stylesheet" href="./game-style.css">
+</head>
+
+<body>
+    <h1>Symmetry Game - Class 6 Chapter 1</h1>
+    <div id="game-area">
+        <button onclick="startLevel(1)">Start Level 1</button>
+        <button id="level-2-btn" disabled onclick="startLevel(2)">Level 2 (Locked)</button>
+        <button id="level-3-btn" disabled onclick="startLevel(3)">Level 3 (Locked)</button>
+    </div>
+
+    <div id="level-content"></div>
+
+    <script>
+        function startLevel(level) {
+            const content = document.getElementById('level-content');
+            
+            if (level === 1) {
+                content.innerHTML = `
+                    <h2>Level 1: Find the Symmetrical Image</h2>
+                    <p>Select the symmetrical image from below:</p>
+                    <div class="image-options">
+                        <img src="./images/triangle.png" onclick="completeLevel(1)">
+                        <img src="./images/asymmetrical1.png" onclick="alert('Try again!')">
+                        <img src="./images/square.png" onclick="completeLevel(1)">
+                        <img src="./images/asymmetrical2.png" onclick="alert('Try again!')">
+                    </div>
+                `;
+            }
+
+            if (level === 2) {
+                content.innerHTML = `
+                    <h2>Level 2: Create the Mirror Image</h2>
+                    <p>Drag the missing half of the image to create the full symmetrical figure.</p>
+                    <div class="mirror-game">
+                        <img src="./images/half-star.png" draggable="true" id="half-piece">
+                        <div class="mirror-area" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+                    </div>
+                    <button onclick="completeLevel(2)">Submit</button>
+                `;
+            }
+
+            if (level === 3) {
+                content.innerHTML = `
+                    <h2>Level 3: How Many Symmetrical Images?</h2>
+                    <p>Count the symmetrical shapes in the below set:</p>
+                    <div class="image-grid">
+                        <img src="./images/symmetrical1.png">
+                        <img src="./images/asymmetrical1.png">
+                        <img src="./images/symmetrical2.png">
+                        <img src="./images/asymmetrical2.png">
+                    </div>
+                    <input type="number" id="sym-count" placeholder="Enter number of symmetrical images">
+                    <button onclick="submitCount()">Submit</button>
+                `;
+            }
+        }
+
+        function allowDrop(ev) {
+            ev.preventDefault();
+        }
+
+        function drag(ev) {
+            ev.dataTransfer.setData("text", ev.target.id);
+        }
+
+        function drop(ev) {
+            ev.preventDefault();
+            const data = ev.dataTransfer.getData("text");
+            ev.target.appendChild(document.getElementById(data));
+        }
+
+        function completeLevel(level) {
+            alert(`Level ${level} completed!`);
+            if (level === 1) document.getElementById('level-2-btn').disabled = false;
+            if (level === 2) document.getElementById('level-3-btn').disabled = false;
+        }
+
+        function submitCount() {
+            const count = document.getElementById('sym-count').value;
+            if (count === '2') {
+                alert('Correct! Level 3 completed.');
+            } else {
+                alert('Incorrect, try again.');
+            }
+        }
+    </script>
+</body>
+
+</html>

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login / Register - Gamified Learning</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="./login-style.css">
 </head>
 
 <body>
@@ -50,7 +50,6 @@
         const nameGroup = document.getElementById("name-group");
         const ageGroup = document.getElementById("age-group");
         const submitButton = authForm.querySelector("button[type='submit']");
-
         let isRegisterMode = true;
 
         registerBtn.addEventListener("click", () => {
@@ -86,13 +85,26 @@
                 return;
             }
 
-            localStorage.setItem("loggedInUser", JSON.stringify({
-                name: name,
-                email: email,
-                age: age
-            }));
+            if (isRegisterMode) {
+                // Save new user to localStorage
+                localStorage.setItem("loggedInUser", JSON.stringify({
+                    name: name,
+                    email: email,
+                    age: age,
+                    password: password
+                }));
 
-            window.location.href = "./dashboard.html";
+                window.location.href = "./dashboard.html";
+            } else {
+                // Login mode: Check existing user
+                const storedUser = JSON.parse(localStorage.getItem("loggedInUser"));
+
+                if (storedUser && storedUser.email === email && storedUser.password === password) {
+                    window.location.href = "./dashboard.html";
+                } else {
+                    document.getElementById("message").innerText = "Invalid email or password.";
+                }
+            }
         });
     </script>
 </body>

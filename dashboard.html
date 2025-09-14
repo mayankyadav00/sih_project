@@ -99,4 +99,32 @@
             });
         }
 
-        function selectChapter(selectedClass, selectedSubject, se
+        function selectChapter(selectedClass, selectedSubject, selectedChapter) {
+            clearSelectionArea();
+            const area = document.getElementById('selection-area');
+            area.innerHTML = `<h2>${selectedSubject} - ${selectedChapter}</h2><h3>Select Level</h3>`;
+
+            const backBtn = createButton("← Back", () => selectSubject(selectedClass, selectedSubject));
+            backBtn.style.backgroundColor = "#F5A623";
+            area.appendChild(backBtn);
+
+            const levels = ["Basic", "Intermediate", "Advanced"];
+            levels.forEach(level => {
+                area.appendChild(createButton(level, () => {
+                    window.location.href = `games/flappy-science.html?class=${selectedClass}&subject=${encodeURIComponent(selectedSubject)}&chapter=${encodeURIComponent(selectedChapter)}&level=${level}`;
+                }));
+            });
+        }
+
+        // Initialize dashboard
+        const userData = localStorage.getItem('loggedInUser');
+        if (userData) {
+            showClassOptions();
+        } else {
+            alert('No user logged in! Redirecting to login page...');
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+
+</html>
